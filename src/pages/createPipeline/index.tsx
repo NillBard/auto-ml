@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   Flex,
   VStack,
@@ -14,6 +14,8 @@ import {
   ModalBody,
   ModalFooter,
   Button,
+  Text,
+  Input,
 } from '@chakra-ui/react'
 import {
   addEdge,
@@ -30,6 +32,7 @@ import file from '../../assets/icons/MdCreateNewFolder.svg'
 import model from '../../assets/icons/BiCube.svg'
 
 import 'reactflow/dist/style.css'
+import { testConnection } from '../../api/api.ts'
 
 let cameraId = 0
 let taskId = 0
@@ -44,9 +47,12 @@ const getTaskId = () => `${taskId++}`
 const CreatePipeline = () => {
   const [nodes, setNodes, onNodeChange] = useNodesState([])
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
+  const [value, setValue] = useState('')
   const connectingNodeId = useRef(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { screenToFlowPosition } = useReactFlow()
+
+  const handleChange = (event) => setValue(event.target.value)
 
   const addNode = useCallback(
     (name: string) => {
@@ -91,6 +97,14 @@ const CreatePipeline = () => {
     [setEdges]
   )
 
+  const ButtonAction = () => {
+    useEffect(() => {
+      testConnection(value)
+        .then((response) => console.log(response))
+        .catch((e) => console.log(e))
+    }, [])
+  }
+
   return (
     <Flex>
       <VStack pl="10px" pt="25px">
@@ -121,9 +135,15 @@ const CreatePipeline = () => {
           <ModalContent>
             <ModalHeader>Параметры</ModalHeader>
             <ModalCloseButton />
-            <ModalBody></ModalBody>
+            <ModalBody>
+              <Text>Источник</Text>
+              <Input placeholder="Адрес rtsp-потока" onChange={handleChange} />
+            </ModalBody>
 
             <ModalFooter>
+              <Button mr="10px" onClick={ButtonAction}>
+                Тест
+              </Button>
               <Button colorScheme="blue" mr={3} onClick={onClose}>
                 Close
               </Button>
