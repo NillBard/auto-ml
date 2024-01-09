@@ -34,16 +34,6 @@ import model from '../../assets/icons/BiCube.svg'
 import 'reactflow/dist/style.css'
 import { testConnection } from '../../api/api.ts'
 
-let cameraId = 0
-let taskId = 0
-let fileId = 0
-let id = 0
-
-const getId = () => `${id++}`
-const getCameraId = () => `${cameraId++}`
-const getFileId = () => `${fileId++}`
-const getTaskId = () => `${taskId++}`
-
 const CreatePipeline = () => {
   const [nodes, setNodes, onNodeChange] = useNodesState([])
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
@@ -52,41 +42,46 @@ const CreatePipeline = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { screenToFlowPosition } = useReactFlow()
 
+  const [cameraNodeId, setCameraNodeId] = useState(0)
+  const [fileNodeId, setFileNodeId] = useState(0)
+  const [taskNodeId, setTaskNodeId] = useState(0)
+
   const handleChange = (event: { target: { value: SetStateAction<string> } }) =>
     setValue(event.target.value)
 
   const addNode = useCallback(
     (name: string) => {
-      let nodeId
-      const id = getId()
-
-      switch (name) {
-        case 'camera':
-          nodeId = getCameraId()
-          break
-        case 'file':
-          nodeId = getFileId()
-          break
-        case 'task':
-          nodeId = getTaskId()
-          break
+      const getId = () => {
+        switch (name) {
+          case 'camera':
+            setCameraNodeId(cameraNodeId + 1)
+            return `camera ${cameraNodeId}`
+          case 'file':
+            setFileNodeId(fileNodeId + 1)
+            return `file ${fileNodeId}`
+          case 'task':
+            setTaskNodeId(taskNodeId + 1)
+            return `task ${taskNodeId}`
+          default:
+            return 'null'
+        }
       }
-
+      const id = getId()
       const newNode = {
         id,
         position: screenToFlowPosition({
-          x: 100,
-          y: 100,
+          x: 200,
+          y: 200,
         }),
         data: {
-          label: `${name} ${nodeId}`,
+          label: `${id}`,
         },
         origin: [0.5, 0.0],
       }
 
       setNodes((nds) => nds.concat(newNode))
     },
-    [screenToFlowPosition, setNodes]
+    [cameraNodeId, fileNodeId, screenToFlowPosition, setNodes, taskNodeId]
   )
 
   const onConnect = useCallback(
@@ -105,21 +100,9 @@ const CreatePipeline = () => {
   }
 
   return (
-    <Flex>
-      <VStack pl="10px" pt="25px">
-        <IconButton aria-label="camera" onClick={() => addNode('camera')}>
-          <Image src={camera} />
-        </IconButton>
-        <IconButton aria-label="file" onClick={() => addNode('file')}>
-          <Image src={file} />
-        </IconButton>
-        <IconButton aria-label="task" onClick={() => addNode('task')}>
-          <Image src={model} />
-        </IconButton>
-      </VStack>
-
-      <Flex w="100vw" h="100vh" pt="25px" pl="25px">
-        <Card w="98%" h="90%">
+    <Flex w="100%">
+      <Flex w="96%" h="100vh" pt="25px" pl="25px" pb="25px">
+        <Card w="100%" h="100%" border="1px" borderColor="gray.200">
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -150,6 +133,17 @@ const CreatePipeline = () => {
           </ModalContent>
         </Modal>
       </Flex>
+      <VStack pr="10px" pt="25px" width="4%">
+        <IconButton aria-label="camera" onClick={() => addNode('camera')}>
+          <Image src={camera} />
+        </IconButton>
+        <IconButton aria-label="file" onClick={() => addNode('file')}>
+          <Image src={file} />
+        </IconButton>
+        <IconButton aria-label="task" onClick={() => addNode('task')}>
+          <Image src={model} />
+        </IconButton>
+      </VStack>
     </Flex>
   )
 }
