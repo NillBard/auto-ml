@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { SetStateAction, useCallback, useRef, useState } from 'react'
 import {
   Flex,
   VStack,
@@ -52,7 +52,8 @@ const CreatePipeline = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { screenToFlowPosition } = useReactFlow()
 
-  const handleChange = (event) => setValue(event.target.value)
+  const handleChange = (event: { target: { value: SetStateAction<string> } }) =>
+    setValue(event.target.value)
 
   const addNode = useCallback(
     (name: string) => {
@@ -98,11 +99,9 @@ const CreatePipeline = () => {
   )
 
   const ButtonAction = () => {
-    useEffect(() => {
-      testConnection(value)
-        .then((response) => console.log(response))
-        .catch((e) => console.log(e))
-    }, [])
+    testConnection(value)
+      .then((response) => console.log(response))
+      .catch((e) => console.log(e))
   }
 
   return (

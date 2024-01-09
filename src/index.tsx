@@ -1,13 +1,17 @@
 import ReactDOM from 'react-dom/client'
-import { ChakraProvider } from '@chakra-ui/react'
+import { BrowserRouter } from 'react-router-dom'
 
-import CreatePipeline from './pages/createPipeline'
+import { ChakraProvider } from '@chakra-ui/react'
 import { ReactFlowProvider } from 'reactflow'
+
+import Routing from './pages'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <ChakraProvider>
     <ReactFlowProvider>
-      <CreatePipeline />
+      <BrowserRouter>
+        <Routing />
+      </BrowserRouter>
     </ReactFlowProvider>
   </ChakraProvider>
 )
