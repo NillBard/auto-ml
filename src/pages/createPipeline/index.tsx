@@ -21,6 +21,7 @@ import {
   addEdge,
   Connection,
   Edge,
+  Node,
   ReactFlow,
   useEdgesState,
   useNodesState,
@@ -86,7 +87,6 @@ const CreatePipeline = () => {
 
   const onConnect = useCallback(
     (params: Edge | Connection) => {
-      // reset the start node on connections
       connectingNodeId.current = null
       setEdges((eds) => addEdge(params, eds))
     },
@@ -99,9 +99,21 @@ const CreatePipeline = () => {
       .catch((e) => console.log(e))
   }
 
+  const onNodeClick = useCallback((_, { id }: Node) => {
+    if (id.includes('camera')) {
+      onOpen()
+    } else if (id.includes('file')) {
+      console.log('file')
+    } else if (id.includes('task')) {
+      console.log('task')
+    } else {
+      console.log('null')
+    }
+  }, [])
+
   return (
     <Flex w="100%">
-      <Flex w="96%" h="100vh" pt="25px" pl="25px" pb="25px">
+      <Flex w="95%" h="100vh" pt="25px" pl="25px" pb="25px">
         <Card w="100%" h="100%" border="1px" borderColor="gray.200">
           <ReactFlow
             nodes={nodes}
@@ -109,7 +121,7 @@ const CreatePipeline = () => {
             onNodesChange={onNodeChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
-            onNodeDoubleClick={onOpen}
+            onNodeDoubleClick={onNodeClick}
           />
         </Card>
         <Modal isOpen={isOpen} onClose={onClose}>
@@ -133,7 +145,7 @@ const CreatePipeline = () => {
           </ModalContent>
         </Modal>
       </Flex>
-      <VStack pr="10px" pt="25px" width="4%">
+      <VStack pr="10px" pt="25px" width="5%">
         <IconButton aria-label="camera" onClick={() => addNode('camera')}>
           <Image src={camera} />
         </IconButton>
