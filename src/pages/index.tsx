@@ -12,9 +12,9 @@ export default function Routing() {
     <Flex>
       <Menu />
       <Routes>
-        <Route path={'/'} element={<MainPage />} />
-        <Route path={'/training'} element={<TablePage />} />
-        <Route path={'/pipeline/*'} element={<PipelinePage />} />
+        <Route path="/" element={<MainPage />} />
+        <Route path="/training" element={<TablePage />} />
+        <Route path="/pipeline" element={<PipelinePage />} />
       </Routes>
     </Flex>
   )

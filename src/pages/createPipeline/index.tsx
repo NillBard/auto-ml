@@ -1,4 +1,4 @@
-import { SetStateAction, useCallback, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import {
   Flex,
   VStack,
@@ -46,9 +46,6 @@ const CreatePipeline = () => {
   const [cameraNodeId, setCameraNodeId] = useState(0)
   const [fileNodeId, setFileNodeId] = useState(0)
   const [taskNodeId, setTaskNodeId] = useState(0)
-
-  const handleChange = (event: { target: { value: SetStateAction<string> } }) =>
-    setValue(event.target.value)
 
   const addNode = useCallback(
     (name: string) => {
@@ -99,17 +96,20 @@ const CreatePipeline = () => {
       .catch((e) => console.log(e))
   }
 
-  const onNodeClick = useCallback((_, { id }: Node) => {
-    if (id.includes('camera')) {
-      onOpen()
-    } else if (id.includes('file')) {
-      console.log('file')
-    } else if (id.includes('task')) {
-      console.log('task')
-    } else {
-      console.log('null')
-    }
-  }, [])
+  const onNodeClick = useCallback(
+    (_, { id }: Node) => {
+      if (id.includes('camera')) {
+        onOpen()
+      } else if (id.includes('file')) {
+        console.log('file')
+      } else if (id.includes('task')) {
+        console.log('task')
+      } else {
+        console.log('null')
+      }
+    },
+    [onOpen]
+  )
 
   return (
     <Flex w="100%">
@@ -131,7 +131,12 @@ const CreatePipeline = () => {
             <ModalCloseButton />
             <ModalBody>
               <Text>Источник</Text>
-              <Input placeholder="Адрес rtsp-потока" onChange={handleChange} />
+              <Input
+                placeholder="Адрес rtsp-потока"
+                onChange={(e) => {
+                  setValue(e.target.value)
+                }}
+              />
             </ModalBody>
 
             <ModalFooter>
