@@ -8,50 +8,31 @@ import {
   Tbody,
   Td,
   Link,
+  Button,
 } from '@chakra-ui/react'
 
-interface ITrainingData {
-  id: number
-  name: string
-  model: string
-  task: string
-  createdAt: string
-}
+import { getTrainingConfigurations } from '../../api/api.ts'
+import { useEffect, useState } from 'react'
+import { ITrain } from '../../types/train.ts'
 
 const HistoryTable = () => {
-  const tableData = [
-    {
-      id: 0,
-      name: 'name',
-      model: 'yolov4',
-      task: 'object detection',
-      createdAt: '18/04/2012 15:07:33',
-    },
-    {
-      id: 1,
-      name: 'name1',
-      model: 'yolov5',
-      task: 'image classification',
-      createdAt: '18/04/2012 15:07:33',
-    },
-    {
-      id: 2,
-      name: 'name2',
-      model: 'yolov8',
-      task: 'image segmentation',
-      createdAt: '18/04/2012 15:07:33',
-    },
-    {
-      id: 3,
-      name: 'name3',
-      model: 'yolov4',
-      task: 'object detection',
-      createdAt: '18/04/2012 15:07:33',
-    },
-  ]
+  const [tableData, setTableData] = useState<[ITrain]>()
 
+  useEffect(() => {
+    const getConf = () => {
+      getTrainingConfigurations()
+        .then((response) => {
+          console.log(response.data)
+          setTableData(response.data)
+        })
+        .catch((e) => {
+          console.log(e)
+        })
+    }
+    getConf()
+  }, [])
   return (
-    <Flex width="100%">
+    <Flex width="100%" direction="column" gap="10px">
       <TableContainer width="100%" pl="100px" pt="50px">
         <Table variant="simple">
           <Thead>
@@ -59,29 +40,34 @@ const HistoryTable = () => {
               <Th>ID</Th>
               <Th>Название</Th>
               <Th>Модель</Th>
-              <Th>Задача</Th>
               <Th>Дата создания</Th>
-              <Th>Изменить</Th>
+              <Th>Статус</Th>
+              <Th>Конфигурация</Th>
             </Tr>
           </Thead>
           <Tbody>
-            {tableData.map((data: ITrainingData) => {
-              return (
-                <Tr>
-                  <Td>{data.id}</Td>
-                  <Td>{data.name}</Td>
-                  <Td>{data.model}</Td>
-                  <Td>{data.task}</Td>
-                  <Td>{data.createdAt}</Td>
-                  <Td>
-                    <Link>Смотреть конфигурацию</Link>
-                  </Td>
-                </Tr>
-              )
-            })}
+            {tableData
+              ? tableData.map((data: ITrain) => {
+                  return (
+                    <Tr>
+                      <Td>{data.id}</Td>
+                      <Td>{data.name}</Td>
+                      <Td>{data.model}</Td>
+                      <Td>{data.created_at}</Td>
+                      <Td>{data.status}</Td>
+                      <Td>
+                        <Link>Конфигурация</Link>
+                      </Td>
+                    </Tr>
+                  )
+                })
+              : null}
           </Tbody>
         </Table>
       </TableContainer>
+      <Button w="400px" alignSelf="center">
+        Новая конфигурация
+      </Button>
     </Flex>
   )
 }

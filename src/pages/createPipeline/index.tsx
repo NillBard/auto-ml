@@ -16,6 +16,7 @@ import {
   Button,
   Text,
   Input,
+  HStack,
 } from '@chakra-ui/react'
 import {
   addEdge,
@@ -38,10 +39,12 @@ import { testConnection } from '../../api/api.ts'
 const CreatePipeline = () => {
   const [nodes, setNodes, onNodeChange] = useNodesState([])
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
-  const [value, setValue] = useState('')
+  const [inputValue, setInputValue] = useState('')
   const connectingNodeId = useRef(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { screenToFlowPosition } = useReactFlow()
+
+  const [cameraSource, setCameraSource] = useState('')
 
   const [cameraNodeId, setCameraNodeId] = useState(0)
   const [fileNodeId, setFileNodeId] = useState(0)
@@ -90,9 +93,12 @@ const CreatePipeline = () => {
     [setEdges]
   )
 
-  const ButtonAction = () => {
-    testConnection(value)
-      .then((response) => console.log(response))
+  const ButtonAction = (cameraUrl: string) => {
+    testConnection(inputValue)
+      .then((response) => {
+        console.log(response)
+        setCameraSource(cameraUrl)
+      })
       .catch((e) => console.log(e))
   }
 
@@ -124,6 +130,7 @@ const CreatePipeline = () => {
             onNodeDoubleClick={onNodeClick}
           />
         </Card>
+
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
           <ModalContent>
@@ -131,18 +138,23 @@ const CreatePipeline = () => {
             <ModalCloseButton />
             <ModalBody>
               <Text>Источник</Text>
-              <Input
-                placeholder="Адрес rtsp-потока"
-                onChange={(e) => {
-                  setValue(e.target.value)
-                }}
-              />
+              <HStack>
+                <Input
+                  placeholder="Адрес rtsp-потока"
+                  onChange={(e) => {
+                    setInputValue(e.target.value)
+                  }}
+                />
+                <Button mr="10px" onClick={() => ButtonAction(inputValue)}>
+                  Тест
+                </Button>
+              </HStack>
+              <Flex h="150px">
+                <Image src={cameraSource}></Image>
+              </Flex>
             </ModalBody>
 
             <ModalFooter>
-              <Button mr="10px" onClick={ButtonAction}>
-                Тест
-              </Button>
               <Button colorScheme="blue" mr={3} onClick={onClose}>
                 Close
               </Button>

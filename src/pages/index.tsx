@@ -6,6 +6,7 @@ import Menu from '../components/commonMenu'
 const PipelinePage = lazy(() => import('./createPipeline'))
 const TablePage = lazy(() => import('./historyTable'))
 const MainPage = lazy(() => import('./main'))
+const ConfigurePage = lazy(() => import('./configureTraining'))
 
 export default function Routing() {
   return (
@@ -15,6 +16,7 @@ export default function Routing() {
         <Route path="/" element={<MainPage />} />
         <Route path="/training" element={<TablePage />} />
         <Route path="/pipeline" element={<PipelinePage />} />
+        <Route path="/training/configure" element={<ConfigurePage />} />
       </Routes>
     </Flex>
   )
