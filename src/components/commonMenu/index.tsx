@@ -9,8 +9,8 @@ import deployIcon from '../../assets/icons/BsFillDiagram3Fill.svg'
 const Menu = () => {
   const navigate = useNavigate()
   return (
-    <Flex height="100vh" width="170px" bg="gray.200">
-      <VStack pl="10px" pt="25px">
+    <Flex height="100vh" width="170px" bg="gray.200" pl="10px">
+      <VStack pt="25px">
         <Button
           width="150px"
           variant="ghost"

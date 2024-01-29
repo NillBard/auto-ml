@@ -25,4 +25,5 @@ export interface ITrainCreate {
   batch: number
   imgsz: number
   optimizer: string
+  class_names: string[]
 }

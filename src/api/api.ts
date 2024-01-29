@@ -2,16 +2,32 @@ import axios from './axios.ts'
 
 import { ITrain, ITrainCreate } from '../types/train.ts'
 
-export async function testConnection(source: string) {
-  return await axios.post('/pipeline/test', {
+export function testConnection(source: string) {
+  return axios.post('/pipeline/test', {
     source: source,
   })
 }
 
-export async function getTrainingConfigurations() {
-  return await axios.get<[ITrain]>('/train/')
+export function getTrainingConfigurations() {
+  return axios.get<ITrain[]>('/train/all')
 }
 
-export async function createTrainingConfiguration(configuration: ITrainCreate) {
-  return await axios.post('/train/', configuration)
+export function createTrainingConfiguration(configuration: ITrainCreate) {
+  return axios.post<ITrain>('/train/', configuration)
+}
+
+export function uploadDataset(id: number, file: File) {
+  return axios.post(
+    `/train/${id}/dataset`,
+    { dataset: file },
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }
+  )
+}
+
+export function startLearning(id: number) {
+  return axios.post(`/train/${id}/start`)
 }

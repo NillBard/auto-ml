@@ -6,12 +6,13 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { ReactFlowProvider } from 'reactflow'
 
 import Routing from './pages'
+import Menu from './components/commonMenu'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <ChakraProvider>
     <ReactFlowProvider>
       <BrowserRouter>
-        <Suspense fallback={<div>loading</div>}>
+        <Suspense fallback={<Menu />}>
           <Routing />
         </Suspense>
       </BrowserRouter>

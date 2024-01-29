@@ -14,9 +14,11 @@ import {
 import { getTrainingConfigurations } from '../../api/api.ts'
 import { useEffect, useState } from 'react'
 import { ITrain } from '../../types/train.ts'
+import { useNavigate } from 'react-router-dom'
 
 const HistoryTable = () => {
   const [tableData, setTableData] = useState<[ITrain]>()
+  const navidate = useNavigate()
 
   useEffect(() => {
     const getConf = () => {
@@ -32,7 +34,7 @@ const HistoryTable = () => {
     getConf()
   }, [])
   return (
-    <Flex width="100%" direction="column" gap="10px">
+    <Flex w="90%" direction="column" gap="10px">
       <TableContainer width="100%" pl="100px" pt="50px">
         <Table variant="simple">
           <Thead>
@@ -65,7 +67,11 @@ const HistoryTable = () => {
           </Tbody>
         </Table>
       </TableContainer>
-      <Button w="400px" alignSelf="center">
+      <Button
+        w="400px"
+        alignSelf="center"
+        onClick={() => navidate('/training/configure')}
+      >
         Новая конфигурация
       </Button>
     </Flex>
