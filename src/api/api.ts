@@ -8,6 +8,7 @@ export function testConnection(source: string) {
   })
 }
 
+
 export function getTrainingConfigurations() {
   return axios.get<ITrain[]>('/train/all')
 }
