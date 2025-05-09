@@ -6,9 +6,9 @@ import {
   Box,
 } from '@chakra-ui/react'
 
-import { getDatasets } from '../api/api.ts'
+import { getDatasets } from '@/shared/api'
 import { useEffect, useState } from 'react'
-import { IDataset } from '../types/train.ts'
+import { IDataset } from '@/shared/types'
 import { useNavigate } from 'react-router-dom'
 
 export const getDate = (strDate: string) => {

@@ -1,8 +1,7 @@
 import axios from 'axios'
-import { refreshWithoutRepeats } from './api'
+import { refreshWithoutRepeats } from '@/shared/api'
 
-// const instance = axios.create({ baseURL: 'http://127.0.0.1:8000' })
-const instance = axios.create({
+export const instance = axios.create({
   baseURL: '/',
   withCredentials: true,
   responseType: 'json',
@@ -32,4 +31,3 @@ instance.interceptors.response.use(
     throw error
   }
 )
-export default instance

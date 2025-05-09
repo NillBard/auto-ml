@@ -1,10 +1,10 @@
 import { Button, createListCollection, Flex, Input, Portal, Select, Text, VStack } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { IDataset, ITrainCreate } from '../types/train.ts'
+import { IDataset, ITrainCreate } from '@/shared/types'
 import {
   createTrainingConfiguration,
   getDatasets,
-} from '../api/api.ts'
+} from '@/shared/api'
 import { useNavigate } from 'react-router-dom'
 
 const NewConfigurePage = () => {

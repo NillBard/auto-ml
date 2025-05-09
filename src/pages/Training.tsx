@@ -5,9 +5,9 @@ import {
   Box,
 } from '@chakra-ui/react'
 
-import { getTrainingConfigurations } from '../api/api.ts'
+import { getTrainingConfigurations } from '@/shared/api'
 import { useEffect, useState } from 'react'
-import { ITrain } from '../types/train.ts'
+import { ITrain } from '@/shared/types'
 import { useNavigate } from 'react-router-dom'
 
 export const getDate = (strDate: string) => {

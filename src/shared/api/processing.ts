@@ -1,4 +1,4 @@
-import instance from './axios.ts'
+import { instance } from '@/shared/libs'
 
 export function getAllProcessings() {
     return instance.get(

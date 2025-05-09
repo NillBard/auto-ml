@@ -5,7 +5,7 @@ interface LayoutProps {
   children?: ReactNode
 }
 
-export function Layout({ children }: LayoutProps) {
+export function CommonLayout({ children }: LayoutProps) {
   return (
     <Box
       id="container"

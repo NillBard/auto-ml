@@ -1,6 +1,6 @@
 import { Box, Text, Table, Button } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { getAllProcessings, IProcessing } from '../api/processing'
+import { getAllProcessings, IProcessing } from '../shared/api/processing'
 import dayjs from 'dayjs'
 import { useNavigate } from 'react-router-dom'
 

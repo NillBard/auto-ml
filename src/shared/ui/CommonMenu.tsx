@@ -31,7 +31,7 @@ const menuItems = [
   },
 ];
 
-const Menu = () => {
+export const CommonMenu = () => {
   const navigate = useNavigate()
 
   const isLogin = useMatch('/')
@@ -58,5 +58,3 @@ const Menu = () => {
     </Flex>
   )
 }
-
-export default Menu

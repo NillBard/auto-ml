@@ -1,8 +1,6 @@
 import { lazy } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { Flex } from '@chakra-ui/react'
-import Menu from '../components/commonMenu'
-import { Layout } from '../components/layout/layout.tsx'
 
 const LoginPage = lazy(() => import('./Login'))
 const MainPage = lazy(() => import('./Main.tsx'))
@@ -15,11 +13,13 @@ const NewConfigurePage = lazy(() => import('./NewConfigure'))
 // const PipelinePage = lazy(() => import('./createPipeline'))
 const PipelinePage = lazy(() => import('./Pipeline'))
 
+import { CommonMenu, CommonLayout } from '@/shared/ui'
+
 export default function Routing() {
   return (
     <Flex>
-      <Menu />
-      <Layout>
+      <CommonMenu />
+      <CommonLayout>
         <Routes>
           <Route path="/" element={<LoginPage />}></Route>
           <Route path="/main" element={<MainPage />} />
@@ -33,7 +33,7 @@ export default function Routing() {
             element={<ConfigurePage />}
           />
         </Routes>
-      </Layout>
+      </CommonLayout>
     </Flex>
   )
 }

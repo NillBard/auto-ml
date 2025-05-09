@@ -1,9 +1,9 @@
 import { Box, createListCollection, IconButton, Input, Portal, Select, Text } from "@chakra-ui/react";
-import { createProcessing } from "../api/processing";
+import { createProcessing } from "../shared/api/processing";
 import { Button, ButtonGroup, Dialog } from "@chakra-ui/react"
 import { useState } from "react";
 import ReactPlayer from "react-player";
-import { checkPipeline, stopCheckPipeline } from '../api/processing'
+import { checkPipeline, stopCheckPipeline } from '../shared/api/processing'
 import { useNavigate } from 'react-router-dom'
 import { Icon as Iconify } from '@iconify/react'
 

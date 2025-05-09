@@ -9,7 +9,7 @@ import {
     VStack,
 } from '@chakra-ui/react'
 
-import { login } from '../api/api'
+import { login } from '@/shared/api'
 
 const LoginPage = () => {
     const [form, setForm] = useState<{ email: string; password: string }>({

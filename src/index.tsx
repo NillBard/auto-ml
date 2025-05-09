@@ -5,18 +5,18 @@ import { Suspense } from 'react'
 import { ReactFlowProvider } from 'reactflow'
 
 import Routing from './pages'
-import Menu from './components/commonMenu'
+import { CommonMenu } from '@/shared/ui'
 
-import { ChakraProvider, defaultSystem } from "@chakra-ui/react"
+import { Provider } from '@/shared/libs'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <ChakraProvider value={defaultSystem}>
+  <Provider>
     <ReactFlowProvider>
       <BrowserRouter>
-        <Suspense fallback={<Menu />}>
+        <Suspense fallback={<CommonMenu />}>
           <Routing />
         </Suspense>
       </BrowserRouter>
     </ReactFlowProvider>
-  </ChakraProvider>
+  </Provider>
 )

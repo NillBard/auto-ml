@@ -1,20 +1,20 @@
-import { Metrics } from '../../types/train.ts'
+import { Metrics } from '@/shared/types'
 import { Line } from 'react-chartjs-2'
 import { HStack, VStack } from '@chakra-ui/react'
 import { ChartData, Point } from 'chart.js'
 
-const LineChart = (metrics: Metrics) => {
+export const LineChart = (metrics: Metrics) => {
   const data:
     | ChartData<'line', (number | Point | null)[], unknown>[]
     | {
-        labels: string[]
-        datasets: {
-          label: string
-          data: number[]
-          borderColor: string
-          backgroundColor: string
-        }[]
-      }[] = []
+      labels: string[]
+      datasets: {
+        label: string
+        data: number[]
+        borderColor: string
+        backgroundColor: string
+      }[]
+    }[] = []
   const getLine = () => {
     Object.entries(metrics).map(([key, value]) => {
       console.log(key, value)
@@ -59,5 +59,3 @@ const LineChart = (metrics: Metrics) => {
     </VStack>
   )
 }
-
-export default LineChart

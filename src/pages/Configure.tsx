@@ -13,10 +13,10 @@ import {
   Legend,
 } from 'chart.js'
 
-import { ITrain } from '../types/train.ts'
-import { getFile, getTrainingResults } from '../api/api.ts'
+import { ITrain } from '@/shared/types'
+import { getFile, getTrainingResults } from '@/shared/api'
 import { getDate, getStatus } from './Training.tsx'
-import LineChart from '../components/lineChart/index.tsx'
+import { LineChart } from '@/shared/ui'
 import { ArrowBackIcon } from '@chakra-ui/icons'
 
 ChartJS.register(
