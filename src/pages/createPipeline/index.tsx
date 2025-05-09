@@ -1,88 +1,80 @@
 import { useCallback, useRef, useState } from 'react'
 import {
   Flex,
-  VStack,
-  IconButton,
   Card,
-  Image,
   useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Text,
-  Input,
-  HStack,
 } from '@chakra-ui/react'
 import {
   addEdge,
   Connection,
   Edge,
-  Node,
   ReactFlow,
   useEdgesState,
   useNodesState,
   useReactFlow,
 } from 'reactflow'
-
-import camera from '../../assets/icons/MdCameraEnhance.svg'
-import file from '../../assets/icons/MdCreateNewFolder.svg'
-import model from '../../assets/icons/BiCube.svg'
-
+import { checkRTSP, startCam, stopCam } from '../../api/api'
 import 'reactflow/dist/style.css'
-import { testConnection } from '../../api/api.ts'
+import { NodePanel, NodeModal, CustomNode } from './components'
+import { useNodeClick, useAddNode } from './hooks'
+import ReactPlayer from 'react-player'
+
+interface ICameraInfo {
+  location: string
+  login: string
+  password: string
+}
+
+const nodeTypes = {
+  custom: CustomNode,
+}
+
+const getModalTitle = (type: string | null): string => {
+  switch (type) {
+    case 'photo':
+      return 'Настройки фото'
+    case 'video':
+      return 'Настройки видео'
+    case 'stream':
+      return 'Настройки потока'
+    case 'file':
+      return 'Настройки файла'
+    case 'task':
+      return 'Настройки задачи'
+    case 'model':
+      return 'Настройки модели'
+    case 'preview':
+      return 'Настройки предпросмотра'
+    case 'save':
+      return 'Настройки сохранения'
+    default:
+      return 'Настройки'
+  }
+}
 
 const CreatePipeline = () => {
   const [nodes, setNodes, onNodeChange] = useNodesState([])
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
-  const [inputValue, setInputValue] = useState('')
   const connectingNodeId = useRef(null)
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const { screenToFlowPosition } = useReactFlow()
-
   const [cameraSource, setCameraSource] = useState('')
+  const [streamId, setStreamId] = useState('')
 
-  const [cameraNodeId, setCameraNodeId] = useState(0)
-  const [fileNodeId, setFileNodeId] = useState(0)
-  const [taskNodeId, setTaskNodeId] = useState(0)
+  const { modalState, onNodeClick, onClose: onNodeModalClose, setInputValue: setNodeInputValue, onSave } = useNodeClick()
+  const { addNode: createNode } = useAddNode()
+
+  const onCloseAction = () => {
+    stopCam(streamId)
+    onNodeModalClose()
+  }
+
+  const playerRef = useRef<ReactPlayer>(null)
 
   const addNode = useCallback(
-    (name: string) => {
-      const getId = () => {
-        switch (name) {
-          case 'camera':
-            setCameraNodeId(cameraNodeId + 1)
-            return `camera ${cameraNodeId}`
-          case 'file':
-            setFileNodeId(fileNodeId + 1)
-            return `file ${fileNodeId}`
-          case 'task':
-            setTaskNodeId(taskNodeId + 1)
-            return `task ${taskNodeId}`
-          default:
-            return 'null'
-        }
-      }
-      const id = getId()
-      const newNode = {
-        id,
-        position: screenToFlowPosition({
-          x: 200,
-          y: 200,
-        }),
-        data: {
-          label: `${id}`,
-        },
-        origin: [0.5, 0.0],
-      }
-
+    (name: 'photo' | 'video' | 'stream' | 'file' | 'task' | 'model' | 'preview' | 'save') => {
+      const newNode = createNode(name)
       setNodes((nds) => nds.concat(newNode))
     },
-    [cameraNodeId, fileNodeId, screenToFlowPosition, setNodes, taskNodeId]
+    [createNode, setNodes]
   )
 
   const onConnect = useCallback(
@@ -92,34 +84,23 @@ const CreatePipeline = () => {
     },
     [setEdges]
   )
+console.log(edges);
 
-  const ButtonAction = (cameraUrl: string) => {
-    testConnection(inputValue)
+  const handleTestConnection = (url: string) => {
+    checkRTSP(url)
       .then((response) => {
         console.log(response)
-        setCameraSource(cameraUrl)
+        setStreamId(response.data.stream_id)
+        setCameraSource(`api/static/streams/${response.data.stream_id}/hls/playlist.m3u8`)
       })
       .catch((e) => console.log(e))
   }
 
-  const onNodeClick = useCallback(
-    (_, { id }: Node) => {
-      if (id.includes('camera')) {
-        onOpen()
-      } else if (id.includes('file')) {
-        console.log('file')
-      } else if (id.includes('task')) {
-        console.log('task')
-      } else {
-        console.log('null')
-      }
-    },
-    [onOpen]
-  )
-
   return (
     <Flex w="100%">
-      <Flex w="95%" h="100vh" pt="25px" pl="25px" pb="25px">
+      <NodePanel onAddNode={addNode} />
+
+      <Flex w="95%" h="100vh" pt="25px" pr="25px" pb="25px">
         <Card w="100%" h="100%" border="1px" borderColor="gray.200">
           <ReactFlow
             nodes={nodes}
@@ -128,51 +109,24 @@ const CreatePipeline = () => {
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             onNodeDoubleClick={onNodeClick}
+            nodeTypes={nodeTypes}
+            fitView
           />
         </Card>
 
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Параметры</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <Text>Источник</Text>
-              <HStack>
-                <Input
-                  placeholder="Адрес rtsp-потока"
-                  onChange={(e) => {
-                    setInputValue(e.target.value)
-                  }}
-                />
-                <Button mr="10px" onClick={() => ButtonAction(inputValue)}>
-                  Тест
-                </Button>
-              </HStack>
-              <Flex h="150px">
-                <Image src={cameraSource}></Image>
-              </Flex>
-            </ModalBody>
-
-            <ModalFooter>
-              <Button colorScheme="blue" mr={3} onClick={onClose}>
-                Close
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
+        <NodeModal
+          isOpen={modalState.isOpen}
+          onClose={onCloseAction}
+          title={getModalTitle(modalState.type)}
+          inputValue={modalState.inputValue}
+          setInputValue={setNodeInputValue}
+          onSave={onSave}
+          type={modalState.type}
+          streamId={streamId}
+          cameraSource={cameraSource}
+          onTestConnection={handleTestConnection}
+        />
       </Flex>
-      <VStack pr="10px" pt="25px" width="5%">
-        <IconButton aria-label="camera" onClick={() => addNode('camera')}>
-          <Image src={camera} />
-        </IconButton>
-        <IconButton aria-label="file" onClick={() => addNode('file')}>
-          <Image src={file} />
-        </IconButton>
-        <IconButton aria-label="task" onClick={() => addNode('task')}>
-          <Image src={model} />
-        </IconButton>
-      </VStack>
     </Flex>
   )
 }
