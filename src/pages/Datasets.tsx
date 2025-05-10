@@ -1,15 +1,8 @@
-import {
-  Table,
-  Text,
-  Button,
-  Link,
-  Box,
-} from '@chakra-ui/react'
+import { Table, Text, Button, Box } from '@chakra-ui/react'
 
 import { getDatasets } from '@/shared/api'
 import { useEffect, useState } from 'react'
 import { IDataset } from '@/shared/types'
-import { useNavigate } from 'react-router-dom'
 
 export const getDate = (strDate: string) => {
   const date = new Date(strDate)
@@ -44,10 +37,19 @@ const DatasetsPage = () => {
   }, [setTableData])
 
   return (
-    <Box p={4} pt={0} width='100%'>
-      <Box display='flex' justifyContent='space-between'>
-        <Text fontSize="2xl" mb={4}>Датасеты</Text>
-        <Button variant="surface" onClick={() => window.open('http://172.16.1.10:8080/projects/create', '_blank')}>Новый датасет</Button>
+    <Box p={4} pt={0} width="100%">
+      <Box display="flex" justifyContent="space-between">
+        <Text fontSize="2xl" mb={4}>
+          Датасеты
+        </Text>
+        <Button
+          variant="surface"
+          onClick={() =>
+            window.open('http://172.16.1.10:8080/projects/create', '_blank')
+          }
+        >
+          Новый датасет
+        </Button>
       </Box>
 
       <Table.Root variant="outline">
@@ -62,25 +64,24 @@ const DatasetsPage = () => {
         <Table.Body>
           {tableData
             ? tableData?.map?.((data: IDataset) => {
-              return (
-                <Table.Row
-                  cursor="pointer"
-                  _hover={{
-                    background: 'gray.100',
-                  }}
-                >
-                  <Table.Cell>{data.id}</Table.Cell>
-                  <Table.Cell>{data.name}</Table.Cell>
-                  <Table.Cell>{getDate(data.created_date)}</Table.Cell>
-                  <Table.Cell>{data.status}</Table.Cell>
-                </Table.Row>
-              )
-            })
+                return (
+                  <Table.Row
+                    cursor="pointer"
+                    _hover={{
+                      background: 'gray.100',
+                    }}
+                  >
+                    <Table.Cell>{data.id}</Table.Cell>
+                    <Table.Cell>{data.name}</Table.Cell>
+                    <Table.Cell>{getDate(data.created_date)}</Table.Cell>
+                    <Table.Cell>{data.status}</Table.Cell>
+                  </Table.Row>
+                )
+              })
             : null}
-
         </Table.Body>
       </Table.Root>
-    </Box >
+    </Box>
   )
 }
 

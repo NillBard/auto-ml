@@ -6,11 +6,10 @@ import { ReactFlowProvider } from 'reactflow'
 
 import Routing from './pages'
 import { CommonMenu } from '@/shared/ui'
-
-import { Provider } from '@/shared/libs'
+import { ChakraProvider, defaultSystem } from "@chakra-ui/react"
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <Provider>
+  <ChakraProvider value={defaultSystem}>
     <ReactFlowProvider>
       <BrowserRouter>
         <Suspense fallback={<CommonMenu />}>
@@ -18,5 +17,5 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         </Suspense>
       </BrowserRouter>
     </ReactFlowProvider>
-  </Provider>
+  </ChakraProvider>
 )
