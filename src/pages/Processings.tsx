@@ -1,10 +1,6 @@
 import { Box, Text, Table, Button, IconButton, Link } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import {
-  downloadDetections,
-  getAllProcessings,
-  IProcessing,
-} from '@/shared/api'
+import { getAllProcessings, IProcessing } from '@/shared/api'
 import dayjs from 'dayjs'
 import { useNavigate } from 'react-router-dom'
 import { Icon as Iconify } from '@iconify/react/dist/iconify.js'

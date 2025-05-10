@@ -56,7 +56,7 @@ const PipelinePage = () => {
 
   const [pipelineID, setPipelineID] = useState('')
   const handleTestPipeline = () => {
-    checkPipeline(rtspURL, selectedModel?.[0] || '')
+    checkPipeline(rtspURL)
       .then((response) => {
         console.log(response)
         setPipelineID(response.data.stream_id)
