@@ -29,14 +29,34 @@ export const LineChart = (metrics: Metrics) => {
           },
         ],
       }
-      data.push(chartData)
+      
+      if(!['best_metrics', 'epochs'].includes(key)) {
+        data.push(chartData)
+      }
     })
   }
 
   getLine()
+
+  console.log('data: ', data);
+  
   return (
     <VStack w="100%">
-      <HStack w="30%" justifyContent="center">
+      {data.map((_, index) => {
+        if(index <= data.length/2 - 1 ) {
+          console.log('index', index);
+          
+          return (
+            (
+              <HStack w="45%" justifyContent="center">
+                <Line data={data[index*2]} />
+                <Line data={data[index]} />
+              </HStack>
+            )
+          )
+        }
+      })}
+      {/* <HStack w="30%" justifyContent="center">
         <Line data={data[0]} />
         <Line data={data[1]} />
       </HStack>
@@ -55,7 +75,7 @@ export const LineChart = (metrics: Metrics) => {
       <HStack w="30%" justifyContent="center">
         <Line data={data[8]} />
         <Line data={data[9]} />
-      </HStack>
+      </HStack> */}
     </VStack>
   )
 }

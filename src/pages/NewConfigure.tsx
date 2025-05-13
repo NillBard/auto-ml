@@ -1,11 +1,14 @@
 import { Button, createListCollection, Flex, Input, Portal, Select, Text, VStack } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { IDataset, ITrainCreate } from '@/shared/types'
+import { IDataset, IMlModel, ITrainCreate } from '@/shared/types'
 import {
   createTrainingConfiguration,
   getDatasets,
+  getMlModels,
 } from '@/shared/api'
 import { useNavigate } from 'react-router-dom'
+
+
 
 const NewConfigurePage = () => {
   const [name, setName] = useState('')
@@ -13,12 +16,12 @@ const NewConfigurePage = () => {
   const [epoch, setEpoch] = useState(0)
   const [batch, setBatch] = useState(16)
   const [imgsz, setImgsz] = useState(640)
+  const [taskType, setTaskType] = useState('classification')
   const [optimizer, setOptimizer] = useState('auto')
   const [datasets, setDatasets] = useState<IDataset[]>([])
   const [selectedDataset, setSelectedDataset] = useState<string>("")
-
+  const [mlModels, setMlModels] = useState<IMlModel[]>([])
   const navigate = useNavigate()
-
 
   useEffect(() => {
     getDatasets()
@@ -33,9 +36,23 @@ const NewConfigurePage = () => {
       })
   }, [setDatasets])
 
+  useEffect(() => {
+    getMlModels(taskType)
+      .then((response) => {
+        console.log(response.data);
+        setMlModels(response.data)
+      })
+      .catch((e) => {
+        if (e.response) {
+          console.log(e.response.status)
+        }
+      })
+  }, [taskType])
+
   const ButtonAction = () => {
     const conf: ITrainCreate = {
       name: name,
+      task_type: taskType,
       model: model,
       epochs: epoch,
       batch: batch,
@@ -59,6 +76,14 @@ const NewConfigurePage = () => {
       })
   }
 
+  const taskTypes = createListCollection({
+    items: [
+      { label: "Классификация", value: "classification" },
+      { label: "Детекция", value: "detection" },
+      { label: "Сегментация", value: "segmentation" },
+    ],
+  })
+
   const models = createListCollection({
     items: [
       { label: "yolov8n", value: "yolov8n" },
@@ -69,17 +94,17 @@ const NewConfigurePage = () => {
     ],
   })
 
-  const [platform, setPlatforms] = useState('')
-  const platforms = createListCollection({
-    items: [
-      { label: "Процессор", value: "cpu" },
-      { label: "Видеокарта", value: "gpu" },
-    ],
-  })
+  // const [platform, setPlatforms] = useState('')
+  // const platforms = createListCollection({
+  //   items: [
+  //     { label: "Процессор", value: "cpu" },
+  //     { label: "Видеокарта", value: "gpu" },
+  //   ],
+  // })
 
   const optimizers = createListCollection({
     items: [
-      { label: "auto", value: "auto" },
+      // { label: "auto", value: "auto" },
       { label: "SGD", value: "SGD" },
       { label: "Adam", value: "Adam" },
       { label: "Adamax", value: "Adamax" },
@@ -96,6 +121,12 @@ const NewConfigurePage = () => {
     )) : [],
   })
 
+  const mlOptions = createListCollection({
+    items: mlModels ? mlModels.map((model: IMlModel) => (
+      { label: model.label, value: model.value }
+    )) : [],
+  })
+
   return (
     <Flex>
       <Flex pt="30px" pl="30px">
@@ -107,8 +138,35 @@ const NewConfigurePage = () => {
               setName(e.target.value)
             }}
           ></Input>
+
+          <Text>Выберите тип задачи:</Text>
+          <Select.Root collection={taskTypes} size="sm" value={[taskType]}
+            onValueChange={(e) => setTaskType(e.value?.[0])}>
+            <Select.HiddenSelect />
+            <Select.Control>
+              <Select.Trigger>
+                <Select.ValueText placeholder="Выберите тип задачи" />
+              </Select.Trigger>
+              <Select.IndicatorGroup>
+                <Select.Indicator />
+              </Select.IndicatorGroup>
+            </Select.Control>
+            <Portal>
+              <Select.Positioner>
+                <Select.Content>
+                  {taskTypes.items.map((item) => (
+                    <Select.Item item={item} key={item.value}>
+                      {item.label}
+                      <Select.ItemIndicator />
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select.Positioner>
+            </Portal>
+          </Select.Root>
+
           <Text>Выберите необходимую для обучения модель:</Text>
-          <Select.Root collection={models} size="sm" value={[model]}
+          <Select.Root collection={mlOptions} size="sm" value={[model]}
             onValueChange={(e) => setModel(e.value?.[0])}>
             <Select.HiddenSelect />
             <Select.Control>
@@ -122,7 +180,7 @@ const NewConfigurePage = () => {
             <Portal>
               <Select.Positioner>
                 <Select.Content>
-                  {models.items.map((model) => (
+                  {mlOptions.items.map((model) => (
                     <Select.Item item={model} key={model.value}>
                       {model.label}
                       <Select.ItemIndicator />
@@ -132,7 +190,7 @@ const NewConfigurePage = () => {
               </Select.Positioner>
             </Portal>
           </Select.Root>
-          <Text>Выберите платформу обучения</Text>
+          {/* <Text>Выберите платформу обучения</Text>
           <Select.Root collection={platforms} size="sm" value={[platform]}
             onValueChange={(e) => setPlatforms(e.value?.[0])}>
             <Select.HiddenSelect />
@@ -156,7 +214,8 @@ const NewConfigurePage = () => {
                 </Select.Content>
               </Select.Positioner>
             </Portal>
-          </Select.Root>
+          </Select.Root> */}
+
           <Text pt="25px">Задайте конфигурацию обучения:</Text>
           <Text>Количество эпох обучения</Text>
           <Input

@@ -17,7 +17,6 @@ import { ITrain } from '@/shared/types'
 import { getFile, getTrainingResults } from '@/shared/api'
 import { getDate, getStatus } from './Training.tsx'
 import { LineChart } from '@/shared/ui'
-import { ArrowBackIcon } from '@chakra-ui/icons'
 
 ChartJS.register(
   CategoryScale,
@@ -78,7 +77,7 @@ const ConfigurePage = () => {
       <Flex w="100%" pt="30px" justifyContent="center">
         <VStack alignItems="flex-start">
           <HStack>
-            <ArrowBackIcon onClick={() => navigator('/training')} />
+            <button onClick={() => navigator('/training')} > BACK</button>
             <Text as="b">{configuration?.name}</Text>
           </HStack>
           <Text>Выбранная модель: {configuration?.model}</Text>

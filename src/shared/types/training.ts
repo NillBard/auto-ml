@@ -49,6 +49,7 @@ export interface ITrainCreate {
     batch: number
     imgsz: number
     optimizer: string
+    task_type: string
     class_names: string[]
     device: string
     dataset_id: number
@@ -58,4 +59,9 @@ export interface ICameraInfo {
     location: string
     login: string
     password: string
+}
+
+export interface IMlModel {
+  label: string,
+  value: string,
 }
