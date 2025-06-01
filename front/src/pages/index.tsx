@@ -2,16 +2,16 @@ import { lazy } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { Flex } from '@chakra-ui/react'
 
-const LoginPage = lazy(() => import('./Login'))
+const LoginPage = lazy(() => import('./Login.tsx'))
 const MainPage = lazy(() => import('./Main.tsx'))
-const DatasetsPage = lazy(() => import('./Datasets'))
-const ProcessingsPage = lazy(() => import('./Processings'))
-const TrainingPage = lazy(() => import('./Training'))
-const ConfigurePage = lazy(() => import('./Configure'))
-const NewConfigurePage = lazy(() => import('./NewConfigure'))
+const DatasetsPage = lazy(() => import('./Datasets.tsx'))
+const ProcessingsPage = lazy(() => import('./Processings.tsx'))
+const TrainingPage = lazy(() => import('./Training.tsx'))
+const ConfigurePage = lazy(() => import('./Configure.tsx'))
+const NewConfigurePage = lazy(() => import('./NewConfigure.tsx'))
 
 // const PipelinePage = lazy(() => import('./createPipeline'))
-const PipelinePage = lazy(() => import('./Pipeline'))
+const PipelinePage = lazy(() => import('./Pipeline.tsx'))
 
 import { CommonMenu, CommonLayout } from '@/shared/ui'
 
