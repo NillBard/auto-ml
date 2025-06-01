@@ -12,12 +12,12 @@ import { useNavigate } from 'react-router-dom'
 
 const NewConfigurePage = () => {
   const [name, setName] = useState('')
-  const [model, setModel] = useState('')
-  const [epoch, setEpoch] = useState(0)
+  const [model, setModel] = useState<string[]>([])
+  const [epoch, setEpoch] = useState(2)
   const [batch, setBatch] = useState(16)
   const [imgsz, setImgsz] = useState(640)
   const [taskType, setTaskType] = useState('classification')
-  const [optimizer, setOptimizer] = useState('auto')
+  const [optimizer, setOptimizer] = useState('sgd')
   const [datasets, setDatasets] = useState<IDataset[]>([])
   const [selectedDataset, setSelectedDataset] = useState<string>("")
   const [mlModels, setMlModels] = useState<IMlModel[]>([])
@@ -41,6 +41,8 @@ const NewConfigurePage = () => {
       .then((response) => {
         console.log(response.data);
         setMlModels(response.data)
+        const newModels = response.data.map((item:IMlModel) => item.value);
+        setModel(newModels)
       })
       .catch((e) => {
         if (e.response) {
@@ -53,7 +55,7 @@ const NewConfigurePage = () => {
     const conf: ITrainCreate = {
       name: name,
       task_type: taskType,
-      model: model,
+      models: model,
       epochs: epoch,
       batch: batch,
       imgsz: imgsz,
@@ -84,15 +86,15 @@ const NewConfigurePage = () => {
     ],
   })
 
-  const models = createListCollection({
-    items: [
-      { label: "yolov8n", value: "yolov8n" },
-      { label: "yolov8s", value: "yolov8s" },
-      { label: "yolov8m", value: "yolov8m" },
-      { label: "yolov8l", value: "yolov8l" },
-      { label: "yolov8x", value: "yolov8x" },
-    ],
-  })
+  // const models = createListCollection({
+  //   items: [
+  //     { label: "yolov8n", value: "yolov8n" },
+  //     { label: "yolov8s", value: "yolov8s" },
+  //     { label: "yolov8m", value: "yolov8m" },
+  //     { label: "yolov8l", value: "yolov8l" },
+  //     { label: "yolov8x", value: "yolov8x" },
+  //   ],
+  // })
 
   // const [platform, setPlatforms] = useState('')
   // const platforms = createListCollection({
@@ -101,6 +103,16 @@ const NewConfigurePage = () => {
   //     { label: "Видеокарта", value: "gpu" },
   //   ],
   // })
+
+  const setModelsConfig = (value: string) => {
+    let newModels = [];
+    if (model.includes(value)) {
+      newModels = model.filter(item => item !== value);
+    } else {
+      newModels = [...model, value];
+    }
+    setModel(newModels)
+  }
 
   const optimizers = createListCollection({
     items: [
@@ -126,6 +138,24 @@ const NewConfigurePage = () => {
       { label: model.label, value: model.value }
     )) : [],
   })
+
+  const testAction = () => {
+    const conf: ITrainCreate = {
+      name: name,
+      task_type: taskType,
+      models: model,
+      epochs: epoch,
+      batch: batch,
+      imgsz: imgsz,
+      optimizer: optimizer,
+      class_names: [],
+      device: "cpu",
+      dataset_id: Number(selectedDataset)
+    }
+
+    console.log(conf);
+    
+  }
 
   return (
     <Flex>
@@ -166,8 +196,8 @@ const NewConfigurePage = () => {
           </Select.Root>
 
           <Text>Выберите необходимую для обучения модель:</Text>
-          <Select.Root collection={mlOptions} size="sm" value={[model]}
-            onValueChange={(e) => setModel(e.value?.[0])}>
+          <Select.Root collection={mlOptions} size="sm" value={model}
+            onValueChange={(e) => setModelsConfig(e.value?.[0])}>
             <Select.HiddenSelect />
             <Select.Control>
               <Select.Trigger>
@@ -289,6 +319,7 @@ const NewConfigurePage = () => {
             </Portal>
           </Select.Root>
           <Button onClick={ButtonAction}>Запустить обучение</Button>
+          {/* <Button onClick={testAction}>test</Button> */}
         </VStack>
       </Flex>
     </Flex>

@@ -23,6 +23,15 @@ export type Metric = Record<string, number>
 
 export type Metrics = Record<ResultMetricsKeys, Metric>
 
+export interface ITrainProject {
+  id: number,
+  name: string,
+  status: string,
+  best_model_id: number,
+  created_at: string,
+  trains: ITrain[],
+}
+
 export interface ITrain {
     id: number
     name: string
@@ -44,7 +53,7 @@ export interface IDataset {
 
 export interface ITrainCreate {
     name: string
-    model: string
+    models: string[]
     epochs: number
     batch: number
     imgsz: number

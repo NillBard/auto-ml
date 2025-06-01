@@ -50,7 +50,7 @@ export const LineChart = (metrics: Metrics) => {
             (
               <HStack w="45%" justifyContent="center">
                 <Line data={data[index*2]} />
-                <Line data={data[index]} />
+                <Line data={data[index*2+1]} />
               </HStack>
             )
           )

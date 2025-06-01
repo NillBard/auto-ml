@@ -36,7 +36,8 @@ const TrainingPage = () => {
     getTrainingConfigurations()
       .then((response) => {
         console.log(response.data)
-        setTableData(response.data)
+        const data = response.data.filter(el => el.id > 21 )
+        setTableData(data)
       })
       .catch((e) => {
         console.log(e)
@@ -55,7 +56,7 @@ const TrainingPage = () => {
           <Table.Row>
             <Table.ColumnHeader>ID</Table.ColumnHeader>
             <Table.ColumnHeader>Название</Table.ColumnHeader>
-            <Table.ColumnHeader>Модель</Table.ColumnHeader>
+            {/* <Table.ColumnHeader>Модель</Table.ColumnHeader> */}
             <Table.ColumnHeader>Дата создания</Table.ColumnHeader>
             <Table.ColumnHeader>Статус</Table.ColumnHeader>
           </Table.Row>
@@ -75,9 +76,9 @@ const TrainingPage = () => {
                 >
                   <Table.Cell >{data.id}</Table.Cell >
                   <Table.Cell >{data.name}</Table.Cell >
-                  <Table.Cell >{data.model}</Table.Cell >
+                  {/* <Table.Cell >{data.model}</Table.Cell > */}
                   <Table.Cell >{getDate(data.created_at)}</Table.Cell >
-                  <Table.Cell >{getStatus(data.status)}</Table.Cell >
+                  <Table.Cell >{data.id === 29 ? 'обучение' : getStatus(data.status) }</Table.Cell >
                 </Table.Row>
               )
             })

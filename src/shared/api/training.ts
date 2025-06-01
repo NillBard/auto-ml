@@ -1,5 +1,5 @@
 import { instance } from '../libs/axios.ts';
-import { ITrain, ITrainCreate } from '@/shared/types';
+import { ITrain, ITrainCreate, ITrainProject } from '@/shared/types';
 
 export function getTrainingConfigurations() {
     return instance.get<ITrain[]>('/api/train/all', { withCredentials: true })
@@ -16,9 +16,9 @@ export function startLearning(id: number) {
 }
 
 export function getTrainingResults(id: string) {
-    return instance.get<ITrain>(`/api/train/${id}`, { withCredentials: true })
+    return instance.get<ITrainProject>(`/api/train/project/${id}`, { withCredentials: true })
 }
 
-export function getFile(id: string, type: string) {
+export function getFile(id: number, type: string) {
     return instance.get(`/api/train/${id}/${type}`, { withCredentials: true, responseType: 'blob' })
 }
